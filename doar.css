@@ -1,0 +1,156 @@
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', Arial, sans-serif;
+  background-color: #ffffff;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.top-bar {
+  background-color: #65D800;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  height: 90px;
+}
+
+.profile-icon {
+  width: 50px;
+  height: 47px;
+  border-radius: 50%;
+}
+
+.email-input {
+  width: 226px;
+  height: 34px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 20px;
+  background-color: #e0e0e0;
+  font-size: 12px;
+  font-family: 'Inter', Arial, sans-serif;
+  color: #555;
+  outline: none;
+}
+
+.email-input:disabled {
+  color: #555;
+}
+
+.home-link {
+  font-size: 16px;
+  font-weight: bold;
+  color: black;
+}
+
+.content {
+  flex: 1;
+  padding: 20px 24px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+}
+
+.photo-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.photo-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  background-color: #f0f0f0;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  color: #555;
+  transition: background-color 0.3s ease;
+}
+
+.photo-label:hover {
+  background-color: #e0e0e0;
+}
+
+.photo-preview {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.preview-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #65D800;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #3a7b06;
+}
+
+.back-button-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.back-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #65D800;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.back-button:hover {
+  background-color: #3a7b06;
+}

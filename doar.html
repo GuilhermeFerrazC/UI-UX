@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="doar.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <title>Doar - Alimente-se</title>
+</head>
+<body>
+  <div class="container">
+    <!-- Barra superior -->
+    <div class="top-bar">
+      <img src="logo.png" alt="Logo Alimente-se" class="profile-icon" id="logoIcon">
+      <input type="email" id="userEmail" class="email-input" disabled>
+      <span class="home-link">DOAR</span>
+    </div>
+    <!-- Conteúdo principal -->
+    <div class="content">
+      <form id="donationForm">
+        <div class="form-group">
+          <label for="foodName">Nome do Alimento</label>
+          <input type="text" id="foodName" placeholder="Ex: Arroz" required>
+        </div>
+        <div class="form-group">
+          <label for="quantity">Quantidade</label>
+          <input type="number" id="quantity" placeholder="Ex: 5 kg" required>
+        </div>
+        <div class="form-group">
+          <label for="photo">Foto (opcional)</label>
+          <div class="photo-upload">
+            <label for="photo" class="photo-label">
+              <span class="photo-icon">📷</span>
+              Escolher Foto
+            </label>
+            <input type="file" id="photo" accept="image/*" hidden>
+          </div>
+          <div id="photoPreview" class="photo-preview"></div>
+        </div>
+        <button type="submit" class="submit-button">Doar</button>
+      </form>
+    </div>
+
+    <!-- Botão Voltar -->
+    <div class="back-button-container">
+      <button id="backButton" class="back-button">Voltar</button>
+    </div>
+  </div>
+
+  <script>
+    // Verifica se o usuário está logado
+    const userEmail = localStorage.getItem("loggedUserEmail");
+
+    if (!userEmail) {
+      Swal.fire({
+        icon: "warning",
+        title: "Acesso não autorizado",
+        text: "Você precisa fazer login para acessar esta página.",
+        confirmButtonText: "OK",
+      }).then(() => {
+        window.location.href = "login.html"; // Redireciona para Login
+      });
+    } else {
+      document.getElementById("userEmail").value = userEmail;
+    }
+
+    // Exibir prévia da foto
+    document.getElementById("photo").addEventListener("change", function (event) {
+      const photoPreview = document.getElementById("photoPreview");
+      const file = event.target.files[0];
+
+      // Limpa a prévia anterior
+      photoPreview.innerHTML = "";
+
+      if (file) {
+        const reader = new FileReader();
+
+        // Ao carregar o arquivo, exibir na prévia
+        reader.onload = function (e) {
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          img.alt = "Prévia da Foto";
+          img.classList.add("preview-image");
+          photoPreview.appendChild(img);
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Submeter o formulário de doação
+    document.getElementById("donationForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const foodName = document.getElementById("foodName").value;
+      const quantity = document.getElementById("quantity").value;
+      const photoInput = document.getElementById("photo");
+      const donorEmail = localStorage.getItem("loggedUserEmail"); // Captura o e-mail do doador
+      let photo = "";
+
+      if (photoInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          photo = e.target.result;
+
+          saveDonation(foodName, quantity, photo, donorEmail);
+        };
+        reader.readAsDataURL(photoInput.files[0]);
+      } else {
+        saveDonation(foodName, quantity, photo, donorEmail);
+      }
+    });
+
+    // Função para salvar a doação no localStorage
+    function saveDonation(foodName, quantity, photo, donorEmail) {
+      const donations = JSON.parse(localStorage.getItem("donations")) || [];
+      donations.push({ foodName, quantity, photo, donorEmail }); // Adiciona o e-mail do doador
+      localStorage.setItem("donations", JSON.stringify(donations));
+
+      Swal.fire({
+        icon: "success",
+        title: "Doação realizada com sucesso!",
+        text: `Você doou ${quantity} de ${foodName}.`,
+        confirmButtonText: "OK",
+      }).then(() => {
+        window.location.href = "home.html";
+      });
+    }
+
+    // Redireciona para a página inicial ao clicar no botão Voltar
+    document.getElementById("backButton").addEventListener("click", function () {
+      window.location.href = "home.html";
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alimente-se</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="logo.png" alt="Logo Alimente-se">
+    </div>
+    <h1 class="title">Alimente-se</h1>
+    <p class="subtitle">Doe e compartilhe alimentos</p>
+    <div class="button-container">
+      <button class="arrow-button" id="loginButton">
+        <img src="seta.png" alt="Seta">
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Redireciona para a página de login ao clicar no botão
+    document.getElementById("loginButton").addEventListener("click", function () {
+      window.location.href = "login.html"; // Substitua pelo caminho correto do seu arquivo de login
+    });
+  </script>
+</body>
+</html>

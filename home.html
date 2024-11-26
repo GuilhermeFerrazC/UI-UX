@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="home.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <title>Home - Alimente-se</title>
+</head>
+<body>
+  <div class="container">
+    <!-- Barra superior -->
+    <div class="top-bar">
+      <img src="logo.png" alt="Logo Alimente-se" class="profile-icon" id="logoIcon">
+      <input type="email" id="userEmail" class="email-input" disabled>
+      <span class="home-link">HOME</span>
+    </div>
+    <!-- Conteúdo principal -->
+    <div class="content">
+      <h2>Doações Recentes</h2>
+      <ul id="donationList" class="donation-list"></ul>
+    </div>
+    <!-- Botão flutuante -->
+    <div class="floating-button">
+      <button id="addButton">+</button>
+    </div>
+
+    <!-- Modal para exibir informações do beneficiário -->
+    <div id="beneficiaryModal" class="modal">
+      <div class="modal-content">
+        <span id="closeModal" class="close">&times;</span>
+        <h3>Informações do Beneficiário</h3>
+        <p><strong>Nome:</strong> <span id="modalBeneficiaryName"></span></p>
+        <p><strong>Contato:</strong> <span id="modalBeneficiaryContact"></span></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Verifica se o usuário está logado
+    const userEmail = localStorage.getItem("loggedUserEmail");
+
+    if (!userEmail) {
+      Swal.fire({
+        icon: "warning",
+        title: "Acesso não autorizado",
+        text: "Você precisa fazer login para acessar esta página.",
+        confirmButtonText: "OK",
+      }).then(() => {
+        window.location.href = "login.html"; // Redireciona para Login
+      });
+    } else {
+      document.getElementById("userEmail").value = userEmail;
+    }
+
+    // Carregar doações do localStorage
+    function loadDonations() {
+      const donations = JSON.parse(localStorage.getItem("donations")) || [];
+      const donationList = document.getElementById("donationList");
+
+      donationList.innerHTML = ""; // Limpa a lista antes de recarregar
+
+      donations.forEach((donation, index) => {
+        const listItem = document.createElement("li");
+        listItem.classList.add("donation-item");
+        if (donation.rescued) {
+          listItem.classList.add("rescued"); // Adiciona classe se for resgatado
+          listItem.setAttribute("onclick", `showBeneficiaryInfo('${donation.beneficiaryName}', '${donation.beneficiaryContact}')`);
+        } else {
+          listItem.setAttribute("onclick", `rescueDonation(${index})`);
+        }
+
+        const foodInfo = `
+          <div>
+            <strong>${donation.foodName}</strong> - ${donation.quantity} <br>
+            <small>Doado por: ${donation.donorEmail}</small>
+          </div>
+        `;
+
+        let photo = "";
+        if (donation.photo) {
+          photo = `<img src="${donation.photo}" alt="Imagem do Alimento" class="donation-photo">`;
+        }
+
+        listItem.innerHTML = `
+          ${foodInfo}
+          ${photo}
+        `;
+        donationList.appendChild(listItem);
+      });
+    }
+
+    // Redirecionar para a página DOAR ao clicar no botão +
+    document.getElementById("addButton").addEventListener("click", function () {
+      window.location.href = "doar.html";
+    });
+
+    // Deslogar ao clicar na logo
+    document.getElementById("logoIcon").addEventListener("click", function () {
+      Swal.fire({
+        title: "Deseja sair?",
+        text: "Você será deslogado do sistema.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#65D800",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          localStorage.removeItem("loggedUserEmail");
+          Swal.fire({
+            icon: "success",
+            title: "Deslogado com sucesso!",
+            text: "Você será redirecionado para a página de login.",
+            timer: 2000,
+            showConfirmButton: false,
+          }).then(() => {
+            window.location.href = "login.html"; // Redireciona para Login
+          });
+        }
+      });
+    });
+
+    // Função para resgatar doação
+    function rescueDonation(index) {
+      const donations = JSON.parse(localStorage.getItem("donations")) || [];
+      const donation = donations[index];
+
+      Swal.fire({
+        title: "Resgatar Doação",
+        html: `
+          <input type="text" id="beneficiaryName" class="swal2-input" placeholder="Nome do Beneficiário">
+          <input type="text" id="beneficiaryContact" class="swal2-input" placeholder="Contato do Beneficiário">
+        `,
+        confirmButtonText: "Confirmar",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        preConfirm: () => {
+          const name = document.getElementById("beneficiaryName").value.trim();
+          const contact = document.getElementById("beneficiaryContact").value.trim();
+
+          if (!name || !contact) {
+            Swal.showValidationMessage("Por favor, preencha todos os campos.");
+            return false;
+          }
+
+          return { name, contact };
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const { name, contact } = result.value;
+
+          // Atualizar doação como resgatada
+          donation.rescued = true;
+          donation.beneficiaryName = name;
+          donation.beneficiaryContact = contact;
+          localStorage.setItem("donations", JSON.stringify(donations));
+
+          Swal.fire({
+            icon: "success",
+            title: "Doação Resgatada",
+            text: `${donation.foodName} foi resgatado por ${name} (${contact}).`,
+            confirmButtonText: "OK",
+          });
+
+          loadDonations(); // Recarregar lista
+        }
+      });
+    }
+
+    // Função para exibir informações do beneficiário no modal
+    function showBeneficiaryInfo(name, contact) {
+      const modal = document.getElementById("beneficiaryModal");
+      document.getElementById("modalBeneficiaryName").textContent = name;
+      document.getElementById("modalBeneficiaryContact").textContent = contact;
+
+      modal.style.display = "block"; // Mostra o modal
+
+      // Fechar o modal ao clicar no botão de fechar
+      document.getElementById("closeModal").onclick = function () {
+        modal.style.display = "none";
+      };
+
+      // Fechar o modal ao clicar fora dele
+      window.onclick = function (event) {
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      };
+    }
+
+    // Carregar doações ao carregar a página
+    loadDonations();
+  </script>
+</body>
+</html>

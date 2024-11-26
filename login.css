@@ -1,0 +1,78 @@
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100vh;
+  background-color: #ffffff;
+}
+
+.container {
+  text-align: center;
+  width: 100%;
+  max-width: 360px;
+  padding: 135px 20px 181px; /* Espaçamento do topo e rodapé */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px; /* Espaçamento entre elementos */
+}
+
+.logo img {
+  width: 322px;
+  height: 254px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Gap entre o ícone e a caixa de texto */
+  margin-bottom: 52px; /* Espaço entre o campo de email e o botão */
+}
+
+.icon {
+  width: 31px;
+  height: 31px;
+}
+
+.email-input {
+  width: 284px;
+  height: 52px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  font-size: 16px;
+  outline: none;
+}
+
+.email-input:focus {
+  border-color: #65D800;
+}
+
+.login-button {
+  width: 210px;
+  height: 52px;
+  background-color: #65D800;
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #3a7b06;
+}

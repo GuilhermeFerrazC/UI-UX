@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="login.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <title>Login - Alimente-se</title>
+</head>
+<body>
+  <div class="container">
+    <!-- Imagem Principal -->
+    <div class="logo">
+      <img src="banner.png" alt="Alimente-se">
+    </div>
+    <!-- Título -->
+    <h1 class="title">Alimente-se</h1>
+    <!-- Campo de Email -->
+    <form id="loginForm">
+      <div class="input-group">
+        <img src="pin.svg" alt="Pin" class="icon">
+        <input type="email" id="email" placeholder="Email" class="email-input" required>
+      </div>
+      <!-- Botão de Login -->
+      <button type="submit" class="login-button">Log In</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const emailInput = document.getElementById("email").value;
+
+      // Validação simples de email
+      if (validateEmail(emailInput)) {
+        // Salva o e-mail no localStorage
+        localStorage.setItem("loggedUserEmail", emailInput);
+
+        // Mostra mensagem de sucesso e redireciona para a página Home
+        Swal.fire({
+          icon: "success",
+          title: "Login realizado com sucesso!",
+          text: "Você será redirecionado.",
+          timer: 2000,
+          showConfirmButton: false,
+        }).then(() => {
+          window.location.href = "home.html"; // Redireciona para Home
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Email inválido",
+          text: "Por favor, insira um email válido.",
+        });
+      }
+    });
+
+    // Função para validar o e-mail
+    function validateEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+  </script>
+</body>
+</html>
